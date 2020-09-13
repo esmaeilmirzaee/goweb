@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"net/http"
 	"webvideos/042/views"
-
-	"github.com/gorilla/schema"
 )
 
 func NewUsers() *Users {
@@ -30,14 +28,9 @@ type SignupForm struct {
 }
 
 func (u *Users) Create(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "User created")
-	if err := r.ParseForm(); err != nil {
-		panic(err)
-	}
-
-	dec := schema.NewDecoder()
 	var form SignupForm
-	if err := dec.Decode(&form, r.PostForm); err != nil {
+	fmt.Fprintln(w, "User created")
+	if err := parseForm(r, &form); err != nil {
 		panic(err)
 	}
 	fmt.Fprintln(w, form.Email)
