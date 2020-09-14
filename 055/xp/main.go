@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"log"
 	"os"
@@ -39,4 +40,22 @@ func main() {
 		panic(err)
 	}
 	db.AutoMigrate(&User{})
+	name, email := getInfo()
+	user := User{
+		Name:  name,
+		Email: email,
+	}
+	if err := db.Create(&user).Error; err != nil {
+		panic(err)
+	}
+	fmt.Printf("%+v\n", user)
+}
+
+func getInfo() (name, email string) {
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Println("What is your name?")
+	name, _ = reader.ReadString('\n')
+	fmt.Println("What is your email address?")
+	email, _ = reader.ReadString('\n')
+	return name, email
 }
