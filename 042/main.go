@@ -4,26 +4,16 @@ import (
 	"fmt"
 	"net/http"
 	"webvideos/042/controllers"
-	"webvideos/042/views"
 
 	"github.com/gorilla/mux"
 )
 
-var (
-	homeView   *views.View
-	signupView *views.View
-)
-
-func home(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/html")
-	must(homeView.Render(w, nil))
-}
-
 func main() {
-	homeView = views.NewView("bootstrap", "views/home.gohtml")
 	usersC := controllers.NewUsers()
+	staticC := controllers.NewStatic()
 	r := mux.NewRouter()
-	r.HandleFunc("/", home)
+	r.Handle("/", staticC.Home).Methods("GET")
+	r.Handle("/contact", staticC.Contact).Methods("GET")
 	r.HandleFunc("/signup", usersC.New).Methods("GET")
 	r.HandleFunc("/signup", usersC.Create).Methods("POST")
 
