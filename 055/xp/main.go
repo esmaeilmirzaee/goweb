@@ -23,9 +23,10 @@ func main() {
 	}
 	defer db.Close()
 
-	err = db.Ping()
+	var id int
+	err = db.QueryRow(`INSERT INTO users(name, email) VALUES($1, $2) RETURNING id`, "E E", "e@e.e").Scan(&id)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("Connected successfuly")
+	fmt.Println(id)
 }
