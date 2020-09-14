@@ -22,17 +22,24 @@ func main() {
 		panic(err)
 	}
 	defer db.Close()
-
-	var id int
-	var name, email string
-	row := db.QueryRow(`SELECT id, name, email FROM users WHERE id=$1`, 10)
-	err = row.Scan(&id, &name, &email)
+	type User struct {
+		ID    int
+		Name  string
+		Email string
+	}
+	var users []User
+	rows, err := db.Query(`SELECT id, name, email FROM users`)
 	if err != nil {
-		if err == sql.ErrNoRows {
-			fmt.Println("No rows")
-		} else {
+		panic(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var user User
+		err := rows.Scan(&user.ID, &user.Name, &user.Email)
+		if err != nil {
 			panic(err)
 		}
+		users = append(users, user)
 	}
-	fmt.Println(id, name, email)
+	fmt.Println(users)
 }
