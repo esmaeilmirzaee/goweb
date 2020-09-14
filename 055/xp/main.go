@@ -22,24 +22,17 @@ func main() {
 		panic(err)
 	}
 	defer db.Close()
-	type User struct {
-		ID    int
-		Name  string
-		Email string
-	}
-	var users []User
-	rows, err := db.Query(`SELECT id, name, email FROM users`)
-	if err != nil {
-		panic(err)
-	}
-	defer rows.Close()
-	for rows.Next() {
-		var user User
-		err := rows.Scan(&user.ID, &user.Name, &user.Email)
+
+	for i := 1; i < 7; i++ {
+		userId := 0
+		if i > 3 {
+			userId = 6
+		}
+		amount := 100 * i
+		desc := fmt.Sprintf("USB-C Adapter x%d", i)
+		_, err := db.Exec(`INSERT INTO orders(user_id, amount, description) VALUES($1, $2, $3)`, userId, amount, desc)
 		if err != nil {
 			panic(err)
 		}
-		users = append(users, user)
 	}
-	fmt.Println(users)
 }
