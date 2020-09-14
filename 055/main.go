@@ -3,37 +3,19 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"webvideos/055/views"
+	"webvideos/042/controllers"
 
 	"github.com/gorilla/mux"
 )
 
-var (
-	homeView    *views.View
-	contactView *views.View
-	signupView  *views.View
-)
-
-func home(w http.ResponseWriter, r *http.Request) {
-	must(homeView.Render(w, nil))
-}
-
-func contact(w http.ResponseWriter, r *http.Request) {
-	must(contactView.Render(w, nil))
-}
-
-func signup(w http.ResponseWriter, r *http.Request) {
-	must(signupView.Render(w, nil))
-}
-
 func main() {
-	homeView = views.NewView("bootstrap", "views/home.gohtml")
-	contactView = views.NewView("bootstrap", "views/contact.gohtml")
-	signupView = views.NewView("bootstrap", "views/new.gohtml")
+	userC := controllers.NewUsers()
+	staticC := controllers.NewStatic()
 	r := mux.NewRouter()
-	r.HandleFunc("/", home)
-	r.HandleFunc("/contact", contact)
-	r.HandleFunc("/signup", signup)
+	r.Handle("/", staticC.Home).Methods("GET")
+	r.Handle("/contact", staticC.Contact).Methods("GET")
+	r.HandleFunc("/signup", userC.New).Methods("GET")
+	r.HandleFunc("/signup", userC.Create).Methods("POST")
 	fmt.Println("Listen & Serve")
 	http.ListenAndServe(":3000", r)
 }

@@ -11,7 +11,7 @@
             <div class="column right has-text-centered">
               <h1 class="title is-4">Sign up today</h1>
               <p class="description">Lorem ipsum dolor, sit amet consectetur adipisicing elit</p>
-              <form>
+              <form action="/signup" method="POST">
                 <div class="field">
                   <div class="control">
                     <input class="input is-medium" type="text" placeholder="Name">
@@ -20,7 +20,12 @@
 
                 <div class="field">
                   <div class="control">
-                    <input class="input is-medium" type="email" placeholder="Email">
+                    <input name="email" class="input is-medium" type="email" placeholder="Email">
+                  </div>
+                </div>
+                <div class="field">
+                  <div class="control">
+                    <input name="password" class="input is-medium" type="password" placeholder="Password">
                   </div>
                 </div>
                 <button class="button is-block is-primary is-fullwidth is-medium">Submit</button>
