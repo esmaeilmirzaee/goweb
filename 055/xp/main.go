@@ -24,9 +24,15 @@ func main() {
 	defer db.Close()
 
 	var id int
-	err = db.QueryRow(`INSERT INTO users(name, email) VALUES($1, $2) RETURNING id`, "E E", "e@e.e").Scan(&id)
+	var name, email string
+	row := db.QueryRow(`SELECT id, name, email FROM users WHERE id=$1`, 10)
+	err = row.Scan(&id, &name, &email)
 	if err != nil {
-		panic(err)
+		if err == sql.ErrNoRows {
+			fmt.Println("No rows")
+		} else {
+			panic(err)
+		}
 	}
-	fmt.Println(id)
+	fmt.Println(id, name, email)
 }
