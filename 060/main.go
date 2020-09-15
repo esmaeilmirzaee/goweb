@@ -23,7 +23,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	us.DestructiveReset()
+	us.AutoMigrate()
 
 	staticC := controllers.NewStatic()
 	userC := controllers.NewUsers(us)
@@ -33,6 +33,8 @@ func main() {
 	r.Handle("/contact", staticC.Contact).Methods("GET")
 	r.HandleFunc("/signup", userC.New).Methods("GET")
 	r.HandleFunc("/signup", userC.Create).Methods("POST")
+	r.Handle("/login", userC.LoginView).Methods("GET")
+	r.HandleFunc("/login", userC.Login).Methods("POST")
 	fmt.Println("Listen & Serve")
 	http.ListenAndServe(":3000", r)
 }
