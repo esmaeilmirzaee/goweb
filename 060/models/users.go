@@ -70,15 +70,13 @@ func (us *UserService) Close() error {
 	// us.db.Close()
 }
 
-func (us *UserService) DestructiveReset() error {
-	if err := us.db.Migrator().DropTable(&User{}).Error; err != nil {
-		return err
-	}
-	us.AutoMigrate(&User{})
+func (us *UserService) DestructiveReset() {
+	us.db.Migrator().DropTable(&User{})
+	us.AutoMigrate()
 }
 
 func (us *UserService) AutoMigrate() error {
-	if err := us.db.AutoMigrate(&user{}); err != nil {
+	if err := us.db.AutoMigrate(&User{}); err != nil {
 		return err
 	}
 	return nil
