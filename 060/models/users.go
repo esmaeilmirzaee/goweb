@@ -13,6 +13,8 @@ var (
 	ErrNotFound = errors.New("models: resources not found.")
 )
 
+const userPwPepper = "bookish-umbrella-blissful"
+
 type User struct {
 	gorm.Model
 	Name         string
@@ -54,7 +56,8 @@ func (us *UserService) ByID(id uint) (*User, error) {
 
 // Create fills table
 func (us *UserService) Create(user *User) error {
-	hashedBytes, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	pwBytes := []byte(user.Password + userPwPepper)
+	hashedBytes, err := bcrypt.GenerateFromPassword(pwBytes, bcrypt.DefaultCost)
 	if err != nil {
 		return err
 	}
