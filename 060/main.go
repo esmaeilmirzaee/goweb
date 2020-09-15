@@ -4,13 +4,29 @@ import (
 	"fmt"
 	"net/http"
 	"webvideos/060/controllers"
+	"webvideos/060/models"
 
 	"github.com/gorilla/mux"
 )
 
+const (
+	host     = "localhost"
+	port     = 5432
+	user     = "postgres"
+	password = "password"
+	dbname   = "tb"
+)
+
 func main() {
-	userC := controllers.NewUsers()
+	sqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+	us, err := models.NewUserService(sqlInfo)
+	if err != nil {
+		panic(err)
+	}
+	us.DestructiveReset()
+
 	staticC := controllers.NewStatic()
+	userC := controllers.NewUsers(us)
 
 	r := mux.NewRouter()
 	r.Handle("/", staticC.Home).Methods("GET")

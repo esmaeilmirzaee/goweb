@@ -48,16 +48,28 @@ func (us *UserService) ByID(id uint) (*User, error) {
 	}
 }
 
+// Create fills table
+func (us *UserService) Create(user *User) error {
+	// return nil
+	return us.db.Create(user).Error
+}
+
 // Close method closes user service database connection.
 func (us *UserService) Close() error {
 	return nil
 	// us.db.Close()
 }
 
-func (us *UserService) DestructiveReset(hardRest bool) error {
-	if hardRest {
-		return us.db.Migrator().DropTable(&User{})
-	} else {
-		return us.db.AutoMigrate(&User{})
+func (us *UserService) DestructiveReset() error {
+	if err := us.db.Migrator().DropTable(&User{}).Error; err != nil {
+		return err
 	}
+	us.AutoMigrate(&User{})
+}
+
+func (us *UserService) AutoMigrate() error {
+	if err := us.db.AutoMigrate(&user{}); err != nil {
+		return err
+	}
+	return nil
 }

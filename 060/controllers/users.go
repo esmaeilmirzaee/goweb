@@ -3,11 +3,13 @@ package controllers
 import (
 	"fmt"
 	"net/http"
+	"webvideos/060/models"
 	"webvideos/060/views"
 )
 
 type Users struct {
 	NewView *views.View
+	us      *models.UserService
 }
 
 type SignupForm struct {
@@ -16,9 +18,10 @@ type SignupForm struct {
 	Password string `schema:"password"`
 }
 
-func NewUsers() *Users {
+func NewUsers(us *models.UserService) *Users {
 	return &Users{
 		NewView: views.NewView("bootstrap", "users/new"),
+		us:      us,
 	}
 }
 
@@ -33,6 +36,13 @@ func (u *Users) Create(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "user created.")
 	if err := parseForm(r, &form); err != nil {
 		panic(err)
+	}
+	user := models.User{
+		Name:  form.Name,
+		Email: form.Email,
+	}
+	if err := u.us.Create(&user); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 	fmt.Fprint(w, form)
 }
