@@ -33,7 +33,7 @@ func NewView(layout string, files ...string) *View {
 
 func (v *View) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if err := v.Render(w, nil); err != nil {
-
+		panic(err)
 	}
 }
 
