@@ -102,6 +102,12 @@ func (us *UserService) Authenticate(email, password string) (*User, error) {
 			return nil, err
 		}
 	}
+	cookie := http.Cookie(
+		Name "email",
+		Value: foundUser.Email
+	)
+	http.SetCookie(&cookie)
+
 
 	return foundUser, nil
 }
