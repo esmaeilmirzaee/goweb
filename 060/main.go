@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"net/http"
 	"goweb/060/controllers"
 	"goweb/060/models"
+	"net/http"
 
 	"github.com/gorilla/mux"
 )
@@ -35,6 +35,7 @@ func main() {
 	r.HandleFunc("/signup", userC.Create).Methods("POST")
 	r.Handle("/login", userC.LoginView).Methods("GET")
 	r.HandleFunc("/login", userC.Login).Methods("POST")
+	r.HandleFunc("/cookies", userC.TestCookies).Methods("GET")
 	fmt.Println("Listen & Serve")
 	http.ListenAndServe(":3000", r)
 }
