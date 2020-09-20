@@ -40,7 +40,6 @@ func (u *Users) New(w http.ResponseWriter, r *http.Request) {
 
 func (u *Users) Create(w http.ResponseWriter, r *http.Request) {
 	var form SignupForm
-	fmt.Fprintln(w, "user created.")
 	if err := parseForm(r, &form); err != nil {
 		panic(err)
 	}
@@ -50,9 +49,12 @@ func (u *Users) Create(w http.ResponseWriter, r *http.Request) {
 		Password: form.Password,
 	}
 	if err := u.us.Create(&user); err != nil {
+		fmt.Println("Create method error.")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
-	fmt.Fprint(w, user)
+	signIn(w, &user)
+	http.Redirect(w, r, "/cookies", http.StatusFound)
 }
 
 func (u *Users) Login(w http.ResponseWriter, r *http.Request) {
@@ -79,18 +81,25 @@ func (u *Users) Login(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	signIn(w, user)
+	http.Redirect(w, r, "/cookies", http.StatusFound)
+}
+
+// SIgnIn allows user to login using cookies.
+func signIn(w http.ResponseWriter, user *models.User) {
 	cookie := http.Cookie{
 		Name:  "email",
 		Value: user.Email,
 	}
 	http.SetCookie(w, &cookie)
-	fmt.Fprintln(w, user)
+
 }
 
 func (u *Users) TestCookies(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("email")
 	if err != nil {
-		fmt.Fprintln(w, err.Error())
+		fmt.Println("TestCoockies method.")
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 	fmt.Fprintln(w, cookie)
 }
