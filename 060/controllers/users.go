@@ -2,9 +2,9 @@ package controllers
 
 import (
 	"fmt"
+	"goweb/060/models"
+	"goweb/060/views"
 	"net/http"
-	"webvideos/060/models"
-	"webvideos/060/views"
 )
 
 type Users struct {
@@ -62,14 +62,27 @@ func (u *Users) Login(w http.ResponseWriter, r *http.Request) {
 	}
 	user, err := u.us.Authenticate(form.Email, form.Password)
 
-	switch err {
-	case models.ErrNotFound:
-		fmt.Fprintln(w, "Invalid Email address")
-	case models.ErrInvalidPassword:
-		fmt.Fprintln(w, "Invalid password.")
-	case nil:
-		fmt.Fprintln(w, user)
-	default:
-		fmt.Fprintln(w, err.Error(), http.StatusInternalServerError)
+	// Checks if user exists or not.
+	if user == nil {
+		fmt.Fprintln(w, "Invalid email/password.")
+		return
 	}
+	if err != nil {
+
+		switch err {
+		case models.ErrNotFound:
+			fmt.Fprintln(w, "Invalid Email address")
+		case models.ErrInvalidPassword:
+			fmt.Fprintln(w, "Invalid password.")
+		default:
+			fmt.Fprintln(w, err.Error(), http.StatusInternalServerError)
+		}
+	}
+
+	cookie := http.Cookie{
+		Name:  "email",
+		Value: user.Email,
+	}
+	http.SetCookie(w, &cookie)
+	fmt.Fprintln(w, user)
 }

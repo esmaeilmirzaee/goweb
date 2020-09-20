@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"webvideos/060/controllers"
-	"webvideos/060/models"
+	"goweb/060/controllers"
+	"goweb/060/models"
 
 	"github.com/gorilla/mux"
 )

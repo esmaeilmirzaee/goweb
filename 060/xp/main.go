@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"webvideos/060/models"
+	"goweb/060/models"
 
 	"gorm.io/gorm"
 )

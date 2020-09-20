@@ -1,6 +1,6 @@
 package controllers
 
-import "webvideos/060/views"
+import "goweb/060/views"
 
 type Static struct {
 	Home    *views.View
