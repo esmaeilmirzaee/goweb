@@ -36,6 +36,6 @@ func main() {
 	r.Handle("/login", userC.LoginView).Methods("GET")
 	r.HandleFunc("/login", userC.Login).Methods("POST")
 	r.HandleFunc("/cookies", userC.TestCookies).Methods("GET")
-	fmt.Println("Listen & Serve")
+	fmt.Println("Listen & Serve on 3000")
 	http.ListenAndServe(":3000", r)
 }
