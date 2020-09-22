@@ -2,9 +2,9 @@ package controllers
 
 import (
 	"fmt"
+	"net/http"
 	"goweb/060/models"
 	"goweb/060/views"
-	"net/http"
 )
 
 type Users struct {

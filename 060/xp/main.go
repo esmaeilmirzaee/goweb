@@ -1,21 +1,38 @@
 package main
 
 import (
-	"crypto/hmac"
-	"crypto/sha256"
-	"encoding/base64"
 	"fmt"
-	"webvideos/060/hash"
+	"goweb/060/models"
+)
+
+const (
+	host     = "localhost"
+	port     = 5432
+	user     = "postgres"
+	password = "password"
+	dbname   = "tb"
 )
 
 func main() {
-	// Checking HMAC
-	toHash := []byte("This is my another secret key")
-	h := hmac.New(sha256.New, []byte("This is my secret key"))
-	h.Write(toHash)
-	b := h.Sum(nil)
-	fmt.Println(base64.URLEncoding.EncodeToString(b))
+	// Checking remember token
+	sqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+	us, err := models.NewUserService(sqlInfo)
+	if err != nil {
+		panic(err)
+	}
+	us.DestructiveReset()
 
-	a := hash.NewHMAC("This is my secret key")
-	fmt.Println(a.Hash("This is my another secret key"))
+	user := models.User{
+		Name:     "E E",
+		Email:    "e@e.e",
+		Password: "1234",
+		Remember: "abc123",
+	}
+	err = us.Create(&user)
+	fmt.Printf("%+v", user)
+	user2, err := us.ByRemember("abc123")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("%+v", *user2)
 }
