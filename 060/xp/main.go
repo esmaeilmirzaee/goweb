@@ -1,29 +1,35 @@
 package main
 
-import "fmt"
+import "gorm.io/gorm"
 
-type Cat struct{}
-
-func (c Cat) Speak() {
-	fmt.Println("Meow")
+type UserService struct {
+	us userService
 }
 
-type Dog struct{}
-
-type Huskey struct {
-	Speaker
+type userValidator struct {
+	uc userCache
 }
 
-type Speaker interface {
-	Speak()
+type userCache struct {
+	ug userGorm
 }
 
-func (d Dog) Speak() {
-	fmt.Println("Woof")
+type userGorm struct {
+	db *gorm.DB
 }
 
 func main() {
-	// interface related course
-	h := Huskey{Cat{}}
-	h.Speak()
+	// When a requirements like cache imposes to our code
+	// many changes should happen. Also, the code must
+	// recompile
+	gormdb := &gorm.DB{}
+	UserService{
+		uv: userValidator{
+			uc: userCache{
+				ug: userGorm{
+					db: gormdb,
+				},
+			},
+		},
+	}
 }
