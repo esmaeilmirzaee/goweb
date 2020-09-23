@@ -110,7 +110,8 @@ func (u *Users) signIn(w http.ResponseWriter, user *models.User) error {
 	cookie := http.Cookie{
 		Name:     "remember_token",
 		Value:    user.Remember,
-		HttpOnly: true, // When using heavy JS framework this is impossible that enables vulnerabilities
+		HttpOnly: true, // When  HttpOnly prevents execution of JavaScript so using heavy
+		// JS framework is impossible because it enables vulnerabilities
 	}
 	http.SetCookie(w, &cookie)
 	return nil

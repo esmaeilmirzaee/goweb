@@ -1,38 +1,29 @@
 package main
 
-import (
-	"fmt"
-	"goweb/060/models"
-)
+import "fmt"
 
-const (
-	host     = "localhost"
-	port     = 5432
-	user     = "postgres"
-	password = "password"
-	dbname   = "tb"
-)
+type Cat struct{}
+
+func (c Cat) Speak() {
+	fmt.Println("Meow")
+}
+
+type Dog struct{}
+
+type Huskey struct {
+	Speaker
+}
+
+type Speaker interface {
+	Speak()
+}
+
+func (d Dog) Speak() {
+	fmt.Println("Woof")
+}
 
 func main() {
-	// Checking remember token
-	sqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
-	us, err := models.NewUserService(sqlInfo)
-	if err != nil {
-		panic(err)
-	}
-	us.DestructiveReset()
-
-	user := models.User{
-		Name:     "E E",
-		Email:    "e@e.e",
-		Password: "1234",
-		Remember: "abc123",
-	}
-	err = us.Create(&user)
-	fmt.Printf("%+v", user)
-	user2, err := us.ByRemember("abc123")
-	if err != nil {
-		panic(err)
-	}
-	fmt.Printf("%+v", *user2)
+	// interface related course
+	h := Huskey{Cat{}}
+	h.Speak()
 }
