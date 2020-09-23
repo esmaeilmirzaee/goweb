@@ -2,33 +2,45 @@ package main
 
 import "gorm.io/gorm"
 
+type User struct {
+	id   uint64
+	Name string
+}
+
+type UserReader interface {
+	ByID(id uint) (*User, error)
+}
+
 type UserService struct {
-	us userService
+	UserReader
 }
 
 type userValidator struct {
-	uc userCache
+	UserReader
 }
 
 type userCache struct {
-	ug userGorm
+	UserReader
 }
 
+// userGorm is the bottom layer so it should be implement
+// the UserReader...
 type userGorm struct {
 	db *gorm.DB
 }
 
+func (ug userGorm) ByID(id uint64) (*User, error) {
+	var user User
+	user = User{id: 1233127462314673264, Name: "a a"} // db.Where...
+	return &user, nil
+}
+
 func main() {
-	// When a requirements like cache imposes to our code
-	// many changes should happen. Also, the code must
-	// recompile
 	gormdb := &gorm.DB{}
-	UserService{
-		uv: userValidator{
-			uc: userCache{
-				ug: userGorm{
-					db: gormdb,
-				},
+	us := UserService{
+		UserReader: userValidator{
+			UserReader: userGorm{
+				db: gormdb,
 			},
 		},
 	}
