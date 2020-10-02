@@ -100,7 +100,7 @@ func newUserGorm(connectionInfo string) (*userGorm, error) {
 		logger.Config{
 			SlowThreshold: time.Second,
 			LogLevel:      logger.Info,
-			Colorful:      false,
+			Colorful:      true,
 		},
 	)
 	db, err := gorm.Open(postgres.Open(connectionInfo), &gorm.Config{Logger: newLogger})
